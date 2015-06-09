@@ -3,21 +3,30 @@ package br.com.atlantico.mychronos.fragments;
 import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.Calendar;
 
 import br.com.atlantico.mychronos.R;
+import br.com.atlantico.mychronos.model.Timestamp;
 
-public class CheckinFragment extends Fragment implements View.OnClickListener {
+public class CheckinFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
 
     public static final String TAG = "CheckinFragment";
+
+    private Timestamp[] stamps = new Timestamp[4];
+
+    private int current = 0;
+
+    private TextView[] textViews = new TextView[4];
 
     public CheckinFragment() {
 
@@ -35,7 +44,26 @@ public class CheckinFragment extends Fragment implements View.OnClickListener {
 
         view.findViewById(R.id.btnCheck).setOnClickListener(this);
 
+        textViews[0] = (TextView) view.findViewById(R.id.txtFirstIn);
+        textViews[1] = (TextView) view.findViewById(R.id.txtFirstOut);
+        textViews[2] = (TextView) view.findViewById(R.id.txtSecondIn);
+        textViews[3] = (TextView) view.findViewById(R.id.txtSecondOut);
+
         return view;
+    }
+
+    public void updateUI() {
+        for (int i = 0; i < current; i++) {
+            textViews[i].setText(stamps[i].toString());
+        }
+    }
+
+    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+        Timestamp ts = new Timestamp(hourOfDay, minute);
+        stamps[current] = ts;
+        current++;
+
+        updateUI();
     }
 
     @Override
@@ -44,14 +72,24 @@ public class CheckinFragment extends Fragment implements View.OnClickListener {
 
         switch (id) {
             case R.id.btnCheck:
-                TimePickerFragment dialog = new TimePickerFragment();
-                dialog.show(getFragmentManager(), TAG);
+                if (current < 4) {
+                    TimePickerFragment dialog = new TimePickerFragment();
+                    dialog.setListener(this);
+                    dialog.show(getFragmentManager(), TAG);
+                } else {
+                    Snackbar.make(getView(), R.string.lbl_all_time_set, Snackbar.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
 
-    public static class TimePickerFragment extends DialogFragment
-            implements TimePickerDialog.OnTimeSetListener {
+    public static class TimePickerFragment extends DialogFragment {
+
+        private TimePickerDialog.OnTimeSetListener listener;
+
+        public void setListener(TimePickerDialog.OnTimeSetListener listener) {
+            this.listener = listener;
+        }
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -60,13 +98,8 @@ public class CheckinFragment extends Fragment implements View.OnClickListener {
             int hour = c.get(Calendar.HOUR_OF_DAY);
             int minute = c.get(Calendar.MINUTE);
 
-            // Create a new instance of TimePickerDialog and return it
-            return new TimePickerDialog(getActivity(), this, hour, minute,
+            return new TimePickerDialog(getActivity(), listener, hour, minute,
                     DateFormat.is24HourFormat(getActivity()));
-        }
-
-        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-            // Do something with the time chosen by the user
         }
     }
 }
