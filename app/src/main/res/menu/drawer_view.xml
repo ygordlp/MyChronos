@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_checkin"
+        android:icon="@drawable/ic_event"
+        android:title="@string/lbl_checkin" />
+    <item
+        android:id="@+id/menu_tasks"
+        android:icon="@drawable/ic_headset"
+        android:title="@string/lbl_tasks" />
+    <item
+        android:id="@+id/menu_report"
+        android:icon="@drawable/ic_forum"
+        android:title="@string/lbl_report" />
+
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_dashboard"
+        android:title="@string/lbl_settings" />
+
+    <item
+        android:id="@+id/menu_about"
+        android:icon="@drawable/ic_forum"
+        android:title="@string/lbl_about" />
+
+</menu>

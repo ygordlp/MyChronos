@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">MyChronos</string>
+
+    <string name="lbl_settings">Configurações</string>
+
+    <string name="lbl_checkin">Ponto</string>
+
+    <string name="lbl_tasks">Tarefas</string>
+
+    <string name="lbl_report">Relatório</string>
+
+    <string name="lbl_about">Sobre</string>
+
+    <string name="about">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam varius volutpat ornare. Donec pharetra lectus at finibus viverra. Fusce posuere varius augue vel bibendum. Vivamus velit ligula, semper a purus ut, consequat dictum odio. Nam commodo tincidunt consequat. Etiam egestas tortor ac augue pulvinar condimentum. Integer id interdum eros.\n
+    Nunc vel erat quis odio malesuada maximus sit amet in lectus. Interdum et malesuada fames ac ante ipsum primis in faucibus. Cras vel neque rutrum, ultricies augue eu, rhoncus tortor. Donec mauris nisl, porttitor vel semper vitae, dapibus vel nulla. Maecenas sapien ante, euismod at lacus a, placerat mattis purus. Maecenas ac dignissim augue, in rutrum justo. Sed finibus eros sit amet sapien eleifend vulputate. Nullam sed sem fermentum, euismod tellus vehicula, tempus orci.\n
+    Duis varius malesuada arcu rutrum fermentum. Nunc semper lobortis vulputate. Donec viverra efficitur tellus, in dapibus eros sodales quis. Proin in purus laoreet, malesuada arcu eu, lacinia urna. Sed nibh orci, maximus non volutpat non, dapibus ac mauris. Vestibulum at mi finibus, mollis ex posuere, eleifend nisi. Quisque dolor lectus, dictum aliquet sem malesuada, egestas convallis est.
+    </string>
+    <string name="sub_about">Sobre a aplicação</string>
+    <string name="lbl_check">Bater Ponto</string>
+    <string name="lbl_in">Entrada:</string>
+    <string name="lbl_out">Saída:</string>
+    <string name="lbl_time_not_set">-</string>
+    <string name="lbl_worked_time">Horas trabalhadas:</string>
+    <string name="lbl_out_preview">Previsão de Saída:</string>
+</resources>
