@@ -17,6 +17,8 @@ import br.com.atlantico.mychronos.R;
 
 public class CheckinFragment extends Fragment implements View.OnClickListener {
 
+    public static final String TAG = "CheckinFragment";
+
     public CheckinFragment() {
 
     }
@@ -31,7 +33,21 @@ public class CheckinFragment extends Fragment implements View.OnClickListener {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_checkin, container, false);
 
+        view.findViewById(R.id.btnCheck).setOnClickListener(this);
+
         return view;
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+
+        switch (id) {
+            case R.id.btnCheck:
+                TimePickerFragment dialog = new TimePickerFragment();
+                dialog.show(getFragmentManager(), TAG);
+                break;
+        }
     }
 
     public static class TimePickerFragment extends DialogFragment
