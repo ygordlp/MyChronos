@@ -17,6 +17,7 @@ import java.util.Calendar;
 
 import br.com.atlantico.mychronos.R;
 import br.com.atlantico.mychronos.model.Timestamp;
+import br.com.atlantico.mychronos.utils.TimeUtils;
 
 public class CheckinFragment extends Fragment implements View.OnClickListener, TimePickerDialog.OnTimeSetListener {
 
@@ -27,6 +28,8 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
     private int current = 0;
 
     private TextView[] textViews = new TextView[4];
+
+    private TextView workedHours, timeToLeave;
 
     public CheckinFragment() {
 
@@ -49,12 +52,25 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
         textViews[2] = (TextView) view.findViewById(R.id.txtSecondIn);
         textViews[3] = (TextView) view.findViewById(R.id.txtSecondOut);
 
+        workedHours = (TextView) view.findViewById(R.id.txtWorkedTime);
+        timeToLeave = (TextView) view.findViewById(R.id.txtTimToLeave);
+
         return view;
     }
 
     public void updateUI() {
         for (int i = 0; i < current; i++) {
             textViews[i].setText(stamps[i].toString());
+        }
+
+        if(current > 1){
+            long time = stamps[1].getTime() - stamps[0].getTime();
+
+            if(current > 4){
+                time += stamps[3].getTime() - stamps[2].getTime();
+            }
+
+            workedHours.setText(TimeUtils.TimeToString(time));
         }
     }
 
