@@ -28,4 +28,5 @@ dependencies {
     androidTestCompile 'junit:junit:4.12'
     testCompile 'junit:junit:4.12'
     testCompile 'org.hamcrest:hamcrest-library:1.1'
+    androidTestCompile 'com.jayway.android.robotium:robotium-solo:5.4.1'
 }
