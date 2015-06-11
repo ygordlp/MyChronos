@@ -17,7 +17,7 @@ public class Timestamp {
 
         Calendar c = Calendar.getInstance();
         c.set(c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH),
-                hour, minute);
+                hour, minute, 0);
 
         this.time = c.getTimeInMillis();
     }

@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import br.com.atlantico.mychronos.R;
@@ -23,11 +24,9 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
 
     public static final String TAG = "CheckinFragment";
 
-    private Timestamp[] stamps = new Timestamp[4];
+    private ArrayList<Timestamp> timestamps = new ArrayList<Timestamp>();
 
-    private int current = 0;
-
-    private TextView[] textViews = new TextView[4];
+    private ArrayList<TextView> textViews = new ArrayList<TextView>();
 
     private TextView workedHours, timeToLeave;
 
@@ -47,10 +46,10 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
 
         view.findViewById(R.id.btnCheck).setOnClickListener(this);
 
-        textViews[0] = (TextView) view.findViewById(R.id.txtFirstIn);
-        textViews[1] = (TextView) view.findViewById(R.id.txtFirstOut);
-        textViews[2] = (TextView) view.findViewById(R.id.txtSecondIn);
-        textViews[3] = (TextView) view.findViewById(R.id.txtSecondOut);
+        textViews.add((TextView) view.findViewById(R.id.txtFirstIn));
+        textViews.add((TextView) view.findViewById(R.id.txtFirstOut));
+        textViews.add((TextView) view.findViewById(R.id.txtSecondIn));
+        textViews.add((TextView) view.findViewById(R.id.txtSecondOut));
 
         workedHours = (TextView) view.findViewById(R.id.txtWorkedTime);
         timeToLeave = (TextView) view.findViewById(R.id.txtTimToLeave);
@@ -59,25 +58,31 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
     }
 
     public void updateUI() {
-        for (int i = 0; i < current; i++) {
-            textViews[i].setText(stamps[i].toString());
+        int count = timestamps.size();
+        for (int i = 0; i < count; i++) {
+            textViews.get(i).setText(timestamps.get(i).toString());
         }
 
-        if(current > 1){
-            long time = stamps[1].getTime() - stamps[0].getTime();
+        long workedTime = TimeUtils.calcWorkedTime(timestamps);
 
-            if(current > 4){
-                time += stamps[3].getTime() - stamps[2].getTime();
-            }
-
-            workedHours.setText(TimeUtils.TimeToString(time));
+        if(workedTime > 0){
+            workedHours.setText(TimeUtils.TimeDHMtoString(workedTime));
         }
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Timestamp ts = new Timestamp(hourOfDay, minute);
-        stamps[current] = ts;
-        current++;
+        int count = timestamps.size();
+        if(count > 0){
+            Timestamp last = timestamps.get(count - 1);
+            if(ts.getTime() > last.getTime()){
+                timestamps.add(ts);
+            } else {
+                Snackbar.make(getView(), R.string.lbl_greater_time, Snackbar.LENGTH_SHORT).show();
+            }
+        } else {
+            timestamps.add(ts);
+        }
 
         updateUI();
     }
@@ -88,7 +93,7 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
 
         switch (id) {
             case R.id.btnCheck:
-                if (current < 4) {
+                if (timestamps.size() < 4) {
                     TimePickerFragment dialog = new TimePickerFragment();
                     dialog.setListener(this);
                     dialog.show(getFragmentManager(), TAG);

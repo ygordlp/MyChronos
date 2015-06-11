@@ -23,4 +23,5 @@
     <string name="lbl_worked_time">Horas trabalhadas:</string>
     <string name="lbl_out_preview">Previsão de Saída:</string>
     <string name="lbl_all_time_set">O último horário já foi batido.</string>
+    <string name="lbl_greater_time">O horário selectionado é anterior ao último.</string>
 </resources>
