@@ -126,4 +126,16 @@ public class TimeUtilsTest {
 
         assertEquals(expected, actual);
     }
+
+
+    @Test
+    public void testCalcTimeToLeave_1_timestamp(){
+        ArrayList<Timestamp> timestamps = new ArrayList<>();
+        timestamps.add(new Timestamp(8, 0));
+
+        Timestamp expected = new Timestamp(17,0);
+        Timestamp actual = TimeUtils.calcTimeToLeave(timestamps);
+
+        assertEquals(expected.getTime(), actual.getTime());
+    }
 }

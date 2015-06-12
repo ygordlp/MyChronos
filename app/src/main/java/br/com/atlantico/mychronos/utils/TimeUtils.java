@@ -54,4 +54,10 @@ public class TimeUtils {
 
         return result;
     }
+
+    public static Timestamp calcTimeToLeave(ArrayList<Timestamp> timestamps){
+        Timestamp result = new Timestamp(17,0);
+
+        return result;
+    }
 }
