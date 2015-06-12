@@ -8,6 +8,7 @@ import br.com.atlantico.mychronos.model.Timestamp;
 import br.com.atlantico.mychronos.utils.TimeUtils;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 /**
  * Created by pereira_ygor on 08/06/2015.
@@ -127,6 +128,14 @@ public class TimeUtilsTest {
         assertEquals(expected, actual);
     }
 
+    @Test
+    public void testCalcTimeToLeave_0_timestamp(){
+        ArrayList<Timestamp> timestamps = new ArrayList<>();
+
+        Timestamp actual = TimeUtils.calcTimeToLeave(timestamps);
+
+        assertNull(actual);
+    }
 
     @Test
     public void testCalcTimeToLeave_1_timestamp(){
@@ -134,6 +143,45 @@ public class TimeUtilsTest {
         timestamps.add(new Timestamp(8, 0));
 
         Timestamp expected = new Timestamp(17,0);
+        Timestamp actual = TimeUtils.calcTimeToLeave(timestamps);
+
+        assertEquals(expected.getTime(), actual.getTime());
+    }
+
+    @Test
+    public void testCalcTimeToLeave_2_timestamps(){
+        ArrayList<Timestamp> timestamps = new ArrayList<>();
+        timestamps.add(new Timestamp(8, 0));
+        timestamps.add(new Timestamp(11, 30));
+
+        Timestamp expected = new Timestamp(17,0);
+        Timestamp actual = TimeUtils.calcTimeToLeave(timestamps);
+
+        assertEquals(expected.getTime(), actual.getTime());
+    }
+
+    @Test
+    public void testCalcTimeToLeave_3_timestamps(){
+        ArrayList<Timestamp> timestamps = new ArrayList<>();
+        timestamps.add(new Timestamp(8, 0));
+        timestamps.add(new Timestamp(11, 30));
+        timestamps.add(new Timestamp(13, 00));
+
+        Timestamp expected = new Timestamp(17,30);
+        Timestamp actual = TimeUtils.calcTimeToLeave(timestamps);
+
+        assertEquals(expected.getTime(), actual.getTime());
+    }
+
+    @Test
+    public void testCalcTimeToLeave_4_timestamps(){
+        ArrayList<Timestamp> timestamps = new ArrayList<>();
+        timestamps.add(new Timestamp(8, 0));
+        timestamps.add(new Timestamp(11, 30));
+        timestamps.add(new Timestamp(13, 00));
+        timestamps.add(new Timestamp(17, 50));
+
+        Timestamp expected = new Timestamp(17,30);
         Timestamp actual = TimeUtils.calcTimeToLeave(timestamps);
 
         assertEquals(expected.getTime(), actual.getTime());

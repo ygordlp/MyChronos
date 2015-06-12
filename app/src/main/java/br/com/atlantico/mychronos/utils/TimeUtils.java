@@ -56,7 +56,24 @@ public class TimeUtils {
     }
 
     public static Timestamp calcTimeToLeave(ArrayList<Timestamp> timestamps){
-        Timestamp result = new Timestamp(17,0);
+        Timestamp result = null;
+
+        if(timestamps != null && !timestamps.isEmpty()){
+            long regular = timestamps.get(0).getTime() + (HOUR * 9);
+            int count = timestamps.size();
+            long over = 0;
+            if(count > 2) {
+                long lunchTime = timestamps.get(2).getTime() - timestamps.get(1).getTime();
+                if(lunchTime > HOUR){
+                    over = lunchTime - HOUR;
+                }
+            }
+            result = new Timestamp(regular + over);
+
+            if(result.getHour() < 17){
+                result = new Timestamp(17, 0);
+            }
+        }
 
         return result;
     }

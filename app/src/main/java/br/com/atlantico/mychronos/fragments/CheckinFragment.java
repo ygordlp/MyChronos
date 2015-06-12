@@ -68,6 +68,12 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
         if(workedTime > 0){
             workedHours.setText(TimeUtils.TimeDHMtoString(workedTime));
         }
+
+        Timestamp outTime = TimeUtils.calcTimeToLeave(timestamps);
+
+        if(outTime != null){
+            timeToLeave.setText(outTime.toString());
+        }
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
