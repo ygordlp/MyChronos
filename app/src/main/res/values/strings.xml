@@ -24,4 +24,6 @@
     <string name="lbl_out_preview">Previsão de Saída:</string>
     <string name="lbl_all_time_set">O último horário já foi batido.</string>
     <string name="lbl_greater_time">O horário selectionado é anterior ao último.</string>
+    <string name="lbl_ok">OK</string>
+    <string name="lbl_cancel">Cancelar</string>
 </resources>
