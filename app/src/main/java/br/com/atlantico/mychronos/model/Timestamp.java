@@ -7,11 +7,12 @@ import java.util.Calendar;
  */
 public class Timestamp {
 
+    private long id;
+    private long time;
     private int hour;
     private int minute;
-    private long time;
 
-    public Timestamp(int hour, int minute){
+    public Timestamp(int hour, int minute) {
         this.hour = hour;
         this.minute = minute;
 
@@ -24,7 +25,7 @@ public class Timestamp {
         this.time = c.getTimeInMillis();
     }
 
-    public Timestamp (long time){
+    public Timestamp(long time) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(time);
 
@@ -33,11 +34,11 @@ public class Timestamp {
         this.time = time;
     }
 
-    public long getTime(){
+    public long getTime() {
         return time;
     }
 
-    public int getHour(){
+    public int getHour() {
         return this.hour;
     }
 
@@ -45,11 +46,18 @@ public class Timestamp {
         return this.minute;
     }
 
-    public String toString(){
-        String h = ((hour > 9)? "" : "0") + hour;
-        String m = ((minute > 9)? "" : "0") + minute;
+    public String toString() {
+        String h = ((hour > 9) ? "" : "0") + hour;
+        String m = ((minute > 9) ? "" : "0") + minute;
 
         return h + ":" + m;
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 }

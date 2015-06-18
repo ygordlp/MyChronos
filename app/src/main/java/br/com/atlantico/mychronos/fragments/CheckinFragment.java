@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import br.com.atlantico.mychronos.R;
+import br.com.atlantico.mychronos.db.TimestampDAO;
 import br.com.atlantico.mychronos.model.Timestamp;
 import br.com.atlantico.mychronos.utils.TimeUtils;
 
@@ -23,11 +24,13 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
 
     public static final String TAG = "CheckinFragment";
 
-    private ArrayList<Timestamp> timestamps = new ArrayList<Timestamp>();
+    private ArrayList<Timestamp> timestamps;
 
-    private ArrayList<TextView> textViews = new ArrayList<TextView>();
+    private ArrayList<TextView> textViews;
 
     private TextView workedHours, timeToLeave;
+
+    private TimestampDAO tsDao;
 
     public CheckinFragment() {
 
@@ -45,6 +48,8 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
 
         view.findViewById(R.id.btnCheck).setOnClickListener(this);
 
+        textViews = new ArrayList<TextView>();
+
         textViews.add((TextView) view.findViewById(R.id.txtFirstIn));
         textViews.add((TextView) view.findViewById(R.id.txtFirstOut));
         textViews.add((TextView) view.findViewById(R.id.txtSecondIn));
@@ -54,6 +59,14 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
         timeToLeave = (TextView) view.findViewById(R.id.txtTimToLeave);
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        tsDao = TimestampDAO.getInstance(getActivity());
+        timestamps = tsDao.getAll();
+        updateUI();
     }
 
     public void updateUI() {
@@ -82,11 +95,13 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
             Timestamp last = timestamps.get(count - 1);
             if(ts.getTime() > last.getTime()){
                 timestamps.add(ts);
+                tsDao.add(ts);
             } else {
                 Snackbar.make(getView(), R.string.lbl_greater_time, Snackbar.LENGTH_SHORT).show();
             }
         } else {
             timestamps.add(ts);
+            tsDao.add(ts);
         }
 
         updateUI();
