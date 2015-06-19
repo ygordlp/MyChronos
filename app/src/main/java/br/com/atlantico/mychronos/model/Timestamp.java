@@ -25,6 +25,18 @@ public class Timestamp {
         this.time = c.getTimeInMillis();
     }
 
+    public Timestamp(Calendar cal, int hour, int minute) {
+        this.hour = hour;
+        this.minute = minute;
+
+        cal.set(Calendar.HOUR_OF_DAY, hour);
+        cal.set(Calendar.MINUTE, minute);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+
+        this.time = cal.getTimeInMillis();
+    }
+
     public Timestamp(long time) {
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(time);

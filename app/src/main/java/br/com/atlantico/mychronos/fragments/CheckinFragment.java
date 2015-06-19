@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -28,9 +29,13 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
 
     private ArrayList<TextView> textViews;
 
-    private TextView workedHours, timeToLeave;
+    private TextView txtWorkedHours, txtTimeToLeave, txtDate;
 
     private TimestampDAO tsDao;
+
+    private Calendar curDate = Calendar.getInstance();
+
+    private Button btnNextDate;
 
     public CheckinFragment() {
 
@@ -47,6 +52,9 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
         View view = inflater.inflate(R.layout.fragment_checkin, container, false);
 
         view.findViewById(R.id.btnCheck).setOnClickListener(this);
+        view.findViewById(R.id.btnPrevDate).setOnClickListener(this);
+        btnNextDate = (Button) view.findViewById(R.id.btnNextDate);
+        btnNextDate.setOnClickListener(this);
 
         textViews = new ArrayList<TextView>();
 
@@ -55,8 +63,11 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
         textViews.add((TextView) view.findViewById(R.id.txtSecondIn));
         textViews.add((TextView) view.findViewById(R.id.txtSecondOut));
 
-        workedHours = (TextView) view.findViewById(R.id.txtWorkedTime);
-        timeToLeave = (TextView) view.findViewById(R.id.txtTimToLeave);
+        txtWorkedHours = (TextView) view.findViewById(R.id.txtWorkedTime);
+        txtTimeToLeave = (TextView) view.findViewById(R.id.txtTimToLeave);
+        txtDate = (TextView) view.findViewById(R.id.txtDate);
+
+        tsDao = TimestampDAO.getInstance(getActivity());
 
         return view;
     }
@@ -64,44 +75,76 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
     @Override
     public void onResume() {
         super.onResume();
-        tsDao = TimestampDAO.getInstance(getActivity());
-        timestamps = tsDao.getAll();
         updateUI();
     }
 
     public void updateUI() {
+        txtDate.setText(TimeUtils.getShortDate(curDate));
+
+        timestamps = tsDao.getAllFromDate(TimeUtils.getSQLDate(curDate));
+
         int count = timestamps.size();
-        for (int i = 0; i < count; i++) {
-            textViews.get(i).setText(timestamps.get(i).toString());
+        for (int i = 0; i < 4; i++) {
+            if(i < count) {
+                textViews.get(i).setText(timestamps.get(i).toString());
+            } else {
+                textViews.get(i).setText(R.string.lbl_time_not_set);
+            }
         }
 
         long workedTime = TimeUtils.calcWorkedTime(timestamps);
 
-        if(workedTime > 0){
-            workedHours.setText(TimeUtils.TimeDHMtoString(workedTime));
+        if (workedTime > 0) {
+            txtWorkedHours.setText(TimeUtils.TimeDHMtoString(workedTime));
+        } else {
+            txtWorkedHours.setText(R.string.lbl_time_not_set);
         }
 
         Timestamp outTime = TimeUtils.calcTimeToLeave(timestamps);
 
-        if(outTime != null){
-            timeToLeave.setText(outTime.toString());
+        if (outTime != null) {
+            txtTimeToLeave.setText(outTime.toString());
+        } else {
+            txtTimeToLeave.setText(R.string.lbl_time_not_set);
         }
+
+        updateNextDateButton();
     }
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-        Timestamp ts = new Timestamp(hourOfDay, minute);
+        Timestamp ts = new Timestamp(curDate, hourOfDay, minute);
         int count = timestamps.size();
-        if(count > 0){
+        if (count > 0) {
             Timestamp last = timestamps.get(count - 1);
-            if(ts.getTime() > last.getTime()){
-                timestamps.add(ts);
-                tsDao.add(ts);
+            if (ts.getTime() > last.getTime()) {
+                addTimestamp(ts);
             } else {
                 Snackbar.make(getView(), R.string.lbl_greater_time, Snackbar.LENGTH_SHORT).show();
             }
         } else {
+            addTimestamp(ts);
+        }
+
+        updateUI();
+    }
+
+    private void updateNextDateButton(){
+        Calendar now = Calendar.getInstance();
+        btnNextDate.setEnabled(!TimeUtils.isSameDay(curDate, now));
+    }
+
+    private void addTimestamp(Timestamp ts) {
+        // If added to DB with success, add it to UI.
+        if (tsDao.add(ts)) {
             timestamps.add(ts);
-            tsDao.add(ts);
+        }
+    }
+
+    private void stepDate(boolean next){
+        if(next){
+            curDate.add(Calendar.DAY_OF_MONTH, 1);
+        } else {
+            curDate.add(Calendar.DAY_OF_MONTH, -1);
         }
 
         updateUI();
@@ -120,6 +163,12 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
                 } else {
                     Snackbar.make(getView(), R.string.lbl_all_time_set, Snackbar.LENGTH_SHORT).show();
                 }
+                break;
+            case R.id.btnPrevDate:
+                stepDate(false);
+                break;
+            case R.id.btnNextDate:
+                stepDate(true);
                 break;
         }
     }

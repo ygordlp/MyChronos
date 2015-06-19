@@ -1,6 +1,8 @@
 package br.com.atlantico.mychronos.utils;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Locale;
 
 import br.com.atlantico.mychronos.model.Timestamp;
 
@@ -76,5 +78,42 @@ public class TimeUtils {
         }
 
         return result;
+    }
+
+    public static String getSQLDate(Calendar cal){
+        int year = cal.get(Calendar.YEAR);
+        int month = cal.get(Calendar.MONTH) + 1;
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        String sy = year + "-";
+        String sm = ((month < 10)? "0" : "") + month + "-";
+        String sd = ((day < 10)? "0" : "") + day;
+
+        String date = sy + sm + sd;
+        return date;
+    }
+
+    public static String getShortDate(Calendar cal){
+        int year = cal.get(Calendar.YEAR);
+        int day = cal.get(Calendar.DAY_OF_MONTH);
+
+        String sm = cal.getDisplayName(Calendar.MONTH, Calendar.SHORT, Locale.getDefault());
+
+        String date = sm + " " + day + ", " + year;
+        return date;
+    }
+
+    public static boolean isSameDay(Calendar cal1, Calendar cal2){
+        int y1 = cal1.get(Calendar.YEAR);
+        int m1 = cal1.get(Calendar.MONTH);
+        int d1 = cal1.get(Calendar.DAY_OF_MONTH);
+
+        int y2 = cal2.get(Calendar.YEAR);
+        int m2 = cal2.get(Calendar.MONTH);
+        int d2 = cal2.get(Calendar.DAY_OF_MONTH);
+
+        boolean res = (y1 == y2) && (m1 == m2) && (d1 == d2);
+
+        return res;
     }
 }

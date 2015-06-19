@@ -105,7 +105,7 @@ public class TimestampDAO {
      * @return
      */
     public ArrayList<Timestamp> getAllFromDate(String sqlDateFormat) {
-        String where = "WHERE strftime('%Y-%m-%d', datetime('" + TimestampEntry.COLUMN_TIME + "', 'unixepoch')) LIKE " + sqlDateFormat;
+        String where = "STRFTIME('%Y-%m-%d', datetime("+TimestampEntry.COLUMN_TIME+"/1000, 'unixepoch')) LIKE '" + sqlDateFormat + "'";
         return getAll(where);
     }
 
