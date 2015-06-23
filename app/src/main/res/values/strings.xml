@@ -27,4 +27,6 @@
     <string name="lbl_ok">OK</string>
     <string name="lbl_cancel">Cancelar</string>
     <string name="lbl_back_date"><![CDATA[<<]]></string>
+    <string name="msg_unable_to_record">Não foi possível gravar os dados.</string>
+
 </resources>

@@ -135,8 +135,12 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
 
     private void addTimestamp(Timestamp ts) {
         // If added to DB with success, add it to UI.
-        if (tsDao.add(ts)) {
+        long id = tsDao.add(ts);
+        if (id > 0) {
+            ts.setId(id);
             timestamps.add(ts);
+        } else {
+            Snackbar.make(getView(), R.string.msg_unable_to_record, Snackbar.LENGTH_SHORT).show();
         }
     }
 

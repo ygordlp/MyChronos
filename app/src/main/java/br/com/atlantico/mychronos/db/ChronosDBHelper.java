@@ -19,12 +19,18 @@ public class ChronosDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TimestampEntry.CREATE_TIMESTAMP_TABLE);
+        db.execSQL(TimestampEntry.CREATE_TABLE);
+        db.execSQL(TaskEntry.CREATE_TABLE);
+        db.execSQL(ReportEntry.CREATE_TABLE);
+
+        db.execSQL(TaskEntry.CREATE_LIMBO);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(TimestampEntry.DELETE_TIMESTAMP_TABLE);
+        db.execSQL(TimestampEntry.DELETE_TABLE);
+        db.execSQL(TaskEntry.DELETE_TABLE);
+        db.execSQL(ReportEntry.DELETE_TABLE);
         onCreate(db);
     }
 }

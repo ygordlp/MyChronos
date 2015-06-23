@@ -32,8 +32,8 @@ public class TimestampDAO {
         return instance;
     }
 
-    public boolean add(Timestamp ts) {
-        boolean res = false;
+    public long add(Timestamp ts) {
+        long res = 0;
 
         if (ts != null) {
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
@@ -41,8 +41,7 @@ public class TimestampDAO {
             ContentValues values = new ContentValues();
             values.put(TimestampEntry.COLUMN_TIME, ts.getTime());
 
-            long id = db.insert(TimestampEntry.TABLE_NAME, null, values);
-            res = id > 0;
+            res = db.insert(TimestampEntry.TABLE_NAME, null, values);
         }
 
         return res;
