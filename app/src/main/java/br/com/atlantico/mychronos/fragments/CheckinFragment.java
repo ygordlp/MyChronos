@@ -1,10 +1,8 @@
 package br.com.atlantico.mychronos.fragments;
 
-import android.app.Dialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +16,7 @@ import java.util.Calendar;
 
 import br.com.atlantico.mychronos.R;
 import br.com.atlantico.mychronos.db.TimestampDAO;
+import br.com.atlantico.mychronos.dialogs.TimePickerFragment;
 import br.com.atlantico.mychronos.model.Timestamp;
 import br.com.atlantico.mychronos.utils.TimeUtils;
 
@@ -119,7 +118,7 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
             if (ts.getTime() > last.getTime()) {
                 addTimestamp(ts);
             } else {
-                Snackbar.make(getView(), R.string.lbl_greater_time, Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(getView(), R.string.msg_greater_time, Snackbar.LENGTH_SHORT).show();
             }
         } else {
             addTimestamp(ts);
@@ -165,7 +164,7 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
                     dialog.setListener(this);
                     dialog.show(getFragmentManager(), TAG);
                 } else {
-                    Snackbar.make(getView(), R.string.lbl_all_time_set, Snackbar.LENGTH_SHORT).show();
+                    Snackbar.make(getView(), R.string.msg_all_time_set, Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.btnPrevDate:
@@ -174,30 +173,6 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
             case R.id.btnNextDate:
                 stepDate(true);
                 break;
-        }
-    }
-
-    public static class TimePickerFragment extends DialogFragment {
-
-        private TimePickerDialog.OnTimeSetListener listener;
-
-        public void setListener(TimePickerDialog.OnTimeSetListener listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState) {
-            // Use the current time as the default values for the picker
-            final Calendar c = Calendar.getInstance();
-            int hour = c.get(Calendar.HOUR_OF_DAY);
-            int minute = c.get(Calendar.MINUTE);
-
-            TimePickerDialog dialog = new TimePickerDialog(getActivity(), listener, hour, minute, true);
-
-            dialog.setCancelable(true);
-            dialog.setButton(TimePickerDialog.BUTTON_POSITIVE, getString(R.string.lbl_ok), dialog);
-            dialog.setButton(TimePickerDialog.BUTTON_NEGATIVE, getString(R.string.lbl_cancel), dialog);
-            return dialog;
         }
     }
 }

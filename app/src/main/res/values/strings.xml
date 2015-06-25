@@ -22,11 +22,13 @@
     <string name="lbl_time_not_set">-</string>
     <string name="lbl_worked_time">Horas trabalhadas:</string>
     <string name="lbl_out_preview">Previsão de Saída:</string>
-    <string name="lbl_all_time_set">O último horário já foi batido.</string>
-    <string name="lbl_greater_time">O horário selectionado é anterior ao último.</string>
     <string name="lbl_ok">OK</string>
     <string name="lbl_cancel">Cancelar</string>
     <string name="lbl_back_date"><![CDATA[<<]]></string>
     <string name="msg_unable_to_record">Não foi possível gravar os dados.</string>
+    <string name="msg_task_already_exist">A tarefa já existe.</string>
+    <string name="msg_all_time_set">O último horário já foi batido.</string>
+    <string name="msg_greater_time">O horário selectionado é anterior ao último.</string>
+    <string name="lbl_task_name">Nome da tarefa</string>
 
 </resources>

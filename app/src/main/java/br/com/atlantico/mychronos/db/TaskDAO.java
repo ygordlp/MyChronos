@@ -142,6 +142,8 @@ public class TaskDAO {
 
             int count = db.delete(TaskEntry.TABLE_NAME, TaskEntry.COLUMN_ID + " = " + task.getId(), null);
             res = count > 0;
+
+            db.delete(ReportEntry.TABLE_NAME, ReportEntry.COLUMN_TASK_ID + " = " + task.getId(), null);
         }
 
         return res;
