@@ -16,6 +16,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import br.com.atlantico.mychronos.R;
 import br.com.atlantico.mychronos.activities.MainActivity;
 import br.com.atlantico.mychronos.db.ChronosDBHelper;
@@ -145,4 +149,11 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity>{
 
     }
 
-}
+    public void testBtnVoltar(){
+        solo.clickOnText("Ponto");
+        solo.searchButton("<<");
+        solo.clickOnView(solo.getView(R.id.btnPrevDate));
+    }
+
+    }
+
