@@ -30,5 +30,9 @@
     <string name="msg_all_time_set">O último horário já foi batido.</string>
     <string name="msg_greater_time">O horário selectionado é anterior ao último.</string>
     <string name="lbl_task_name">Nome da tarefa</string>
+    <string name="daily_journey">Jornada Diária</string>
+    <string name="daily_journey_4">4 horas</string>
+    <string name="daily_journey_6">6 horas</string>
+    <string name="daily_journey_8">8 horas</string>
 
 </resources>
