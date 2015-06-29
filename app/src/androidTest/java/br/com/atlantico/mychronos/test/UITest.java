@@ -69,15 +69,6 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity>{
 
     }
 
-    //Entrando na tela de configuração
-    public void testTelaConfiguracao(){
-        solo.clickOnMenuItem("Configurações");
-        Assert.assertTrue(solo.searchText("Jornada Diária"));
-        solo.clickOnRadioButton(0);
-        solo.clickOnRadioButton(1);
-        solo.clickOnRadioButton(2);
-    }
-
     //Selecionando menu Lateral
     public void testMenuLateral(){
         solo.clickOnActionBarHomeButton();
@@ -159,6 +150,5 @@ public class UITest extends ActivityInstrumentationTestCase2<MainActivity>{
         solo.clickOnView(solo.getView(R.id.btnPrevDate));
     }
 
-    }
-
 }
+
