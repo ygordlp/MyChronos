@@ -10,17 +10,15 @@ import java.util.ArrayList;
 import br.com.atlantico.mychronos.model.Task;
 
 /**
- * Created by pereira_ygor on 18/06/2015.
+ * Created by Ygor Duarte on 18/06/2015.
  */
 public class TaskDAO {
 
     private static TaskDAO instance;
 
-    private Context context;
     private ChronosDBHelper mDbHelper;
 
     private TaskDAO(Context ctx) {
-        this.context = ctx;
         mDbHelper = new ChronosDBHelper(ctx);
     }
 
@@ -63,6 +61,8 @@ public class TaskDAO {
             res = new Task(id, c.getString(c.getColumnIndex(TaskEntry.COLUMN_NAME)));
         }
 
+        c.close();
+
         return res;
     }
 
@@ -85,14 +85,14 @@ public class TaskDAO {
         return res;
     }
 
-    private ArrayList<Task> getAll(String where) {
-        ArrayList<Task> tasks = new ArrayList<Task>();
+    private ArrayList<Task> getAll(String where, String orderBy) {
+        ArrayList<Task> tasks = new ArrayList<>();
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
 
         Cursor c = db.query(
                 TaskEntry.TABLE_NAME,
                 TaskEntry.PROJECTION,
-                where, null, null, null, null
+                where, null, null, null, orderBy
         );
 
         if (c.moveToFirst()) {
@@ -111,11 +111,17 @@ public class TaskDAO {
             }
         }
 
+        c.close();
+
         return tasks;
     }
 
     public ArrayList<Task> getAll() {
-        return getAll(null);
+        return getAll(null, null);
+    }
+
+    public ArrayList<Task> getAllOrderBy(String orderBy) {
+        return getAll(null, orderBy);
     }
 
     public boolean update(Task task) {
@@ -137,7 +143,8 @@ public class TaskDAO {
     public boolean delete(Task task) {
         boolean res = false;
 
-        if (task != null && task.getId() > 0) {
+        //Can not delete the first task Limbo
+        if (task != null && task.getId() > 1) {
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
 
             int count = db.delete(TaskEntry.TABLE_NAME, TaskEntry.COLUMN_ID + " = " + task.getId(), null);

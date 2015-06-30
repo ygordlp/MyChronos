@@ -1,6 +1,8 @@
 package br.com.atlantico.mychronos.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import br.com.atlantico.mychronos.R;
 import br.com.atlantico.mychronos.adapters.TaskListAdapter;
@@ -23,8 +28,25 @@ public class TasksFragment extends Fragment implements View.OnClickListener, Tex
 
     private TaskDAO dao;
 
-    public TasksFragment() {
+    private Timer timer = new Timer();
 
+    private TimerTask timerTask = new TimerTask() {
+
+        @Override
+        public void run() {
+            Handler handler = new Handler(Looper.getMainLooper());
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    if (adapter != null) {
+                        adapter.updateActiveTask();
+                    }
+                }
+            });
+        }
+    };
+
+    public TasksFragment() {
     }
 
     @Override
@@ -39,7 +61,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener, Tex
 
         dao = TaskDAO.getInstance(getActivity());
 
-        adapter = new TaskListAdapter(getActivity());
+        adapter = new TaskListAdapter(getActivity(), this);
 
         ListView list = (ListView) view.findViewById(R.id.taskList);
         list.setAdapter(adapter);
@@ -48,6 +70,19 @@ public class TasksFragment extends Fragment implements View.OnClickListener, Tex
         view.findViewById(R.id.fabAddTask).setOnClickListener(this);
 
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        timer.cancel();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        timer.schedule(timerTask, 1000, 30000);
+
     }
 
     @Override
@@ -65,11 +100,11 @@ public class TasksFragment extends Fragment implements View.OnClickListener, Tex
 
     @Override
     public void onTextInput(String text, Object tagItem) {
-        if(tagItem == null){
+        if (tagItem == null) {
             //New task
             Task task = dao.getByName(text);
             //Check if task already exists
-            if(task == null){
+            if (task == null) {
                 task = new Task(text);
                 dao.add(task);
             } else {
@@ -82,14 +117,14 @@ public class TasksFragment extends Fragment implements View.OnClickListener, Tex
             dao.update(task);
         }
 
-        adapter.notifyDataSetChanged();
+        adapter.updateData();
 
     }
 
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
         Task task = adapter.getItem(position);
-        if(task != null) {
+        if (task != null) {
             TextInputDialog dialog = new TextInputDialog();
             dialog.setListner(this);
             dialog.setTagItem(task);

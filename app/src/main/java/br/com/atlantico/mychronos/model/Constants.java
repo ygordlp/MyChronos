@@ -6,5 +6,5 @@ package br.com.atlantico.mychronos.model;
 public interface Constants {
 
     public static final String SHARED_PREFERENCES = "MY_CHRONOS_SHARED_PREFERENCES";
-    public static final String SHARED_PREF_LAST_TASK = "SHARED_PREF_LAST_TASK";
+    public static final long LIMBO_ID = 1;
 }

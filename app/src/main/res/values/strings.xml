@@ -30,5 +30,6 @@
     <string name="msg_all_time_set">O último horário já foi batido.</string>
     <string name="msg_greater_time">O horário selectionado é anterior ao último.</string>
     <string name="lbl_task_name">Nome da tarefa</string>
+    <string name="msg_start_day">Você deve bater o ponto antes de iniciar uma tarefa.</string>
 
 </resources>
