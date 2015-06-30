@@ -34,5 +34,7 @@
     <string name="daily_journey_4">4 horas</string>
     <string name="daily_journey_6">6 horas</string>
     <string name="daily_journey_8">8 horas</string>
-
+    <string name="msg_daily_journey">Sua jornada de trabalho será de %1$s.</string>
+    <string name="msg_task_added">A tarefa adicionada.</string>
+    <string name="msg_task_updated">A tarefa alterada.</string>
 </resources>

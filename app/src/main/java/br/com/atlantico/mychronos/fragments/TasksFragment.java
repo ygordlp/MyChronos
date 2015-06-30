@@ -72,6 +72,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener, Tex
             if(task == null){
                 task = new Task(text);
                 dao.add(task);
+                Snackbar.make(getView(), R.string.msg_task_added, Snackbar.LENGTH_SHORT).show();
             } else {
                 Snackbar.make(getView(), R.string.msg_task_already_exist, Snackbar.LENGTH_SHORT).show();
             }
@@ -80,6 +81,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener, Tex
             Task task = (Task) tagItem;
             task.setName(text);
             dao.update(task);
+            Snackbar.make(getView(), R.string.msg_task_updated, Snackbar.LENGTH_SHORT).show();
         }
 
         adapter.notifyDataSetChanged();

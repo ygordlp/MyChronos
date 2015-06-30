@@ -4,6 +4,7 @@ package br.com.atlantico.mychronos.activities;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -75,10 +76,16 @@ public class SettingsActivity extends AppCompatActivity implements
             mEditor = mPrefs.edit();
         }
 
-        mEditor.putInt(Constants.SHARED_PREF_DAILY_JOURNEY,
-                Integer.valueOf(findViewById(checkedId).getTag().toString()));
+        RadioButton rdb = (RadioButton) findViewById(checkedId);
+
+        int id = Integer.valueOf(rdb.getTag().toString());
+
+        mEditor.putInt(Constants.SHARED_PREF_DAILY_JOURNEY, id);
 
         mEditor.apply();
+
+        Snackbar.make(findViewById(android.R.id.content),
+                getString(R.string.msg_daily_journey, rdb.getText()), Snackbar.LENGTH_SHORT).show();
 
     }
 }
