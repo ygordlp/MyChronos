@@ -26,6 +26,10 @@ public class TimeUtils {
         long days, hours, minutes, daysTotal, hoursTotal;
         String result = "";
 
+        if(time < MINUTE){
+            return (time == 0)? "-" : "> 1m";
+        }
+
         days = time / DAY;
         daysTotal = days * DAY;
 
