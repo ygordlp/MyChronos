@@ -1,21 +1,20 @@
 package br.com.atlantico.mychronos.fragments;
 
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import java.util.Timer;
-import java.util.TimerTask;
-
 import br.com.atlantico.mychronos.R;
 import br.com.atlantico.mychronos.adapters.TaskListAdapter;
+import br.com.atlantico.mychronos.db.DataSetChangedBroadcastReceiver;
 import br.com.atlantico.mychronos.db.TaskDAO;
 import br.com.atlantico.mychronos.dialogs.TextInputDialog;
 import br.com.atlantico.mychronos.model.Task;
@@ -24,34 +23,28 @@ public class TasksFragment extends Fragment implements View.OnClickListener, Tex
 
     public static final String TAG = "TasksFragment";
 
+    private static final int DELAY = 10000;
+
     private TaskListAdapter adapter;
 
     private TaskDAO dao;
 
-    private Timer timer = new Timer();
+    private Handler handler = new Handler();
 
-    private TimerTask timerTask = new TimerTask() {
+    private DataSetChangedBroadcastReceiver receiver;
 
+    private Runnable updateTask = new Runnable() {
         @Override
         public void run() {
-            Handler handler = new Handler(Looper.getMainLooper());
-            handler.post(new Runnable() {
-                @Override
-                public void run() {
-                    if (adapter != null) {
-                        adapter.updateActiveTask();
-                    }
-                }
-            });
+            if(adapter!= null){
+                Log.d(TAG, "Runnable updateActiveTask.");
+                adapter.notifyDataSetChanged();
+            }
+            handler.postDelayed(this, DELAY);
         }
     };
 
     public TasksFragment() {
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
@@ -69,20 +62,28 @@ public class TasksFragment extends Fragment implements View.OnClickListener, Tex
 
         view.findViewById(R.id.fabAddTask).setOnClickListener(this);
 
+        receiver = new DataSetChangedBroadcastReceiver(adapter);
+
         return view;
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        timer.cancel();
+    public void onPause() {
+        Log.d(TAG, "TasksFragment onPause");
+
+        getActivity().unregisterReceiver(receiver);
+        handler.removeCallbacks(updateTask);
+        super.onPause();
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        timer.schedule(timerTask, 1000, 30000);
+    public void onResume() {
+        Log.d(TAG, "TasksFragment onResume");
 
+        getActivity().registerReceiver(receiver, new IntentFilter(DataSetChangedBroadcastReceiver.DATA_CHANGE));
+        adapter.notifyDataSetChanged();
+        handler.postDelayed(updateTask, DELAY);
+        super.onResume();
     }
 
     @Override
