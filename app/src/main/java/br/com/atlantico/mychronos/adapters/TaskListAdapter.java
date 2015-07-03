@@ -116,7 +116,11 @@ public class TaskListAdapter extends BaseAdapter implements View.OnClickListener
     @Override
     public void notifyDataSetChanged() {
         activeReport = reportDao.getLastReport();
-        Log.d(TAG, "notifyDataSetChanged: Active task id = " + activeReport.getTask_id());
+        if(activeReport != null) {
+            Log.d(TAG, "notifyDataSetChanged: Active task id = " + activeReport.getTask_id());
+        } else {
+            Log.d(TAG, "notifyDataSetChanged: Active task id = NO TASK");
+        }
         super.notifyDataSetChanged();
     }
 
