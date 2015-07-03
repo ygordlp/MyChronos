@@ -36,7 +36,6 @@ public class ReportDAO {
 
         if (rep != null) {
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
-            mDbHelper.onUpgrade( mDbHelper.getWritableDatabase(), 0, 0);
 
             ContentValues values = new ContentValues();
             values.put(ReportEntry.COLUMN_TASK_ID, rep.getTask_id());
@@ -49,7 +48,7 @@ public class ReportDAO {
         return res;
     }
 
-    public Report getById(int id) {
+    private Report getReport(String where, boolean last){
         Report res = null;
 
         SQLiteDatabase db = mDbHelper.getReadableDatabase();
@@ -57,11 +56,12 @@ public class ReportDAO {
         Cursor c = db.query(
                 ReportEntry.TABLE_NAME,
                 ReportEntry.PROJECTION,
-                ReportEntry.COLUMN_ID + " = " + id,
+                where,
                 null, null, null, null
         );
 
-        if (c.moveToFirst()) {
+        if (last? c.moveToLast() : c.moveToFirst()) {
+            long id = c.getLong(c.getColumnIndex(ReportEntry.COLUMN_ID));
             long task_id = c.getLong(c.getColumnIndex(ReportEntry.COLUMN_TASK_ID));
             long starTime =  c.getLong(c.getColumnIndex(ReportEntry.COLUMN_START_TIME));
             long endTime =  c.getLong(c.getColumnIndex(ReportEntry.COLUMN_END_TIME));
@@ -69,6 +69,10 @@ public class ReportDAO {
         }
 
         return res;
+    }
+
+    public Report getById(int id) {
+        return getReport(ReportEntry.COLUMN_ID + " = " + id, false);
     }
 
     private ArrayList<Report> getAll(String where) {
@@ -127,6 +131,25 @@ public class ReportDAO {
         String where = "STRFTIME('%Y-%m-%d', datetime("+ReportEntry.COLUMN_START_TIME+"/1000, 'unixepoch')) LIKE '" + sqlDateFormat + "'"
                 + " AND " + ReportEntry.COLUMN_TASK_ID + " = " + task_id;
         return getAll(where);
+    }
+
+    /**
+     * Get the last report of the Task.
+     *
+     * @param task_id Task id.
+     * @return Last report of the task.
+     */
+    public Report getLastReportFromTask(long task_id){
+        return getReport(ReportEntry.COLUMN_TASK_ID + " = " + task_id, true);
+    }
+
+    /**
+     * Get the last report recorded.
+     *
+     * @return Last report.
+     */
+    public Report getLastReport(){
+        return getReport(ReportEntry.COLUMN_END_TIME + " = 0", true);
     }
 
     /**

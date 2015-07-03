@@ -1,6 +1,7 @@
 package br.com.atlantico.mychronos.fragments;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -15,8 +16,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import br.com.atlantico.mychronos.R;
+import br.com.atlantico.mychronos.db.DataSetChangedBroadcastReceiver;
+import br.com.atlantico.mychronos.db.ReportDAO;
 import br.com.atlantico.mychronos.db.TimestampDAO;
 import br.com.atlantico.mychronos.dialogs.TimePickerFragment;
+import br.com.atlantico.mychronos.model.Constants;
+import br.com.atlantico.mychronos.model.Report;
 import br.com.atlantico.mychronos.model.Timestamp;
 import br.com.atlantico.mychronos.utils.TimeUtils;
 
@@ -31,6 +36,8 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
     private TextView txtWorkedHours, txtTimeToLeave, txtDate;
 
     private TimestampDAO tsDao;
+
+    private ReportDAO reportDAO;
 
     private Calendar curDate = Calendar.getInstance();
 
@@ -67,6 +74,7 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
         txtDate = (TextView) view.findViewById(R.id.txtDate);
 
         tsDao = TimestampDAO.getInstance(getActivity());
+        reportDAO = ReportDAO.getInstance(getActivity());
 
         return view;
     }
@@ -84,7 +92,7 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
 
         int count = timestamps.size();
         for (int i = 0; i < 4; i++) {
-            if(i < count) {
+            if (i < count) {
                 textViews.get(i).setText(timestamps.get(i).toString());
             } else {
                 textViews.get(i).setText(R.string.lbl_time_not_set);
@@ -127,7 +135,7 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
         updateUI();
     }
 
-    private void updateNextDateButton(){
+    private void updateNextDateButton() {
         Calendar now = Calendar.getInstance();
         btnNextDate.setEnabled(!TimeUtils.isSameDay(curDate, now));
     }
@@ -138,13 +146,26 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
         if (id > 0) {
             ts.setId(id);
             timestamps.add(ts);
+
+            Report last = reportDAO.getLastReport();
+
+            if (last != null && last.getEndTime() == 0) {
+                last.setEndTime(ts.getTime());
+                reportDAO.update(last);
+            } else {
+                Report report = new Report(Constants.LIMBO_ID, ts.getTime());
+                reportDAO.add(report);
+            }
+
+            getActivity().sendBroadcast(new Intent(DataSetChangedBroadcastReceiver.DATA_CHANGE));
+
         } else {
             Snackbar.make(getView(), R.string.msg_unable_to_record, Snackbar.LENGTH_SHORT).show();
         }
     }
 
-    private void stepDate(boolean next){
-        if(next){
+    private void stepDate(boolean next) {
+        if (next) {
             curDate.add(Calendar.DAY_OF_MONTH, 1);
         } else {
             curDate.add(Calendar.DAY_OF_MONTH, -1);

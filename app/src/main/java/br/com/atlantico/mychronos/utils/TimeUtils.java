@@ -16,6 +16,12 @@ public class TimeUtils {
     public static final long DAY = 24 * HOUR;
 
 
+    /**
+     * Converts time to format 99d99h99m
+     * Examples: 4d, 4d5h, 4d5h30m, 5h30m, 4h30m
+     * @param time
+     * @return
+     */
     public static String TimeDHMtoString(long time) {
         long days, hours, minutes, daysTotal, hoursTotal;
         String result = "";
@@ -103,6 +109,13 @@ public class TimeUtils {
         return date;
     }
 
+    /**
+     * Gets the information if the days are the same, ignoring time;
+     *
+     * @param cal1 A day to be compare
+     * @param cal2 A day to be compare
+     * @return True, if is the same day
+     */
     public static boolean isSameDay(Calendar cal1, Calendar cal2){
         int y1 = cal1.get(Calendar.YEAR);
         int m1 = cal1.get(Calendar.MONTH);
@@ -115,5 +128,28 @@ public class TimeUtils {
         boolean res = (y1 == y2) && (m1 == m2) && (d1 == d2);
 
         return res;
+    }
+
+    /**
+     * Get a day after the cal day or before;
+     * Positive number of days get a day after cal.
+     * Negative number of days get a day before cal.
+     * @param cal
+     * @param days
+     * @return
+     */
+    public Calendar getAfterBeforeDays(Calendar cal, int days){
+        Calendar day = Calendar.getInstance();
+        day.setTimeInMillis(cal.getTimeInMillis());
+        day.add(Calendar.DAY_OF_MONTH, 1);
+        return day;
+    }
+
+    public Calendar getNextDay(Calendar cal){
+        return getAfterBeforeDays(cal, 1);
+    }
+
+    public Calendar getPreviousDay(Calendar cal){
+        return getAfterBeforeDays(cal, -1);
     }
 }

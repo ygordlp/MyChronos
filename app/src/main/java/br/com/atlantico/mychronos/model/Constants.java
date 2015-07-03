@@ -1,4 +1,3 @@
-
 package br.com.atlantico.mychronos.model;
 
 /**

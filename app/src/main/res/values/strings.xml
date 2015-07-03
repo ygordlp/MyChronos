@@ -37,4 +37,6 @@
     <string name="msg_daily_journey">Sua jornada de trabalho será de %1$s.</string>
     <string name="msg_task_added">A tarefa adicionada.</string>
     <string name="msg_task_updated">A tarefa alterada.</string>
+    <string name="msg_start_day">Você deve bater o ponto antes de iniciar uma tarefa.</string>
+
 </resources>
