@@ -1,6 +1,7 @@
 package br.com.atlantico.mychronos.fragments;
 
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 
 import br.com.atlantico.mychronos.R;
+import br.com.atlantico.mychronos.db.DataSetChangedBroadcastReceiver;
 import br.com.atlantico.mychronos.db.ReportDAO;
 import br.com.atlantico.mychronos.db.TimestampDAO;
 import br.com.atlantico.mychronos.dialogs.TimePickerFragment;
@@ -144,6 +146,7 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
         if (id > 0) {
             ts.setId(id);
             timestamps.add(ts);
+
             Report last = reportDAO.getLastReport();
 
             if (last != null && last.getEndTime() == 0) {
@@ -153,6 +156,8 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
                 Report report = new Report(Constants.LIMBO_ID, ts.getTime());
                 reportDAO.add(report);
             }
+
+            getActivity().sendBroadcast(new Intent(DataSetChangedBroadcastReceiver.DATA_CHANGE));
 
         } else {
             Snackbar.make(getView(), R.string.msg_unable_to_record, Snackbar.LENGTH_SHORT).show();

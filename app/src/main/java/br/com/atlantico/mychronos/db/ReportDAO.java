@@ -36,7 +36,6 @@ public class ReportDAO {
 
         if (rep != null) {
             SQLiteDatabase db = mDbHelper.getWritableDatabase();
-            mDbHelper.onUpgrade( mDbHelper.getWritableDatabase(), 0, 0);
 
             ContentValues values = new ContentValues();
             values.put(ReportEntry.COLUMN_TASK_ID, rep.getTask_id());
@@ -150,7 +149,7 @@ public class ReportDAO {
      * @return Last report.
      */
     public Report getLastReport(){
-        return getReport(null, true);
+        return getReport(ReportEntry.COLUMN_END_TIME + " = 0", true);
     }
 
     /**

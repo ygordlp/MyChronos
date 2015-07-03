@@ -3,6 +3,7 @@ package br.com.atlantico.mychronos.adapters;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,13 +27,15 @@ import br.com.atlantico.mychronos.utils.TimeUtils;
  */
 public class TaskListAdapter extends BaseAdapter implements View.OnClickListener {
 
+    public static final String TAG = "TaskListAdapter";
+
     private ArrayList<Task> tasks = new ArrayList<Task>();
     private Context context;
     final private TaskDAO taskDao;
     final private ReportDAO reportDao;
     private LayoutInflater inflater;
-    private Report activeReport = null;
     private TasksFragment tasksFragment;
+    private Report activeReport;
 
     public TaskListAdapter(Context context, TasksFragment tasksFragment) {
         this.context = context;
@@ -42,7 +45,7 @@ public class TaskListAdapter extends BaseAdapter implements View.OnClickListener
         this.reportDao = ReportDAO.getInstance(context);
         this.tasksFragment = tasksFragment;
 
-        this.activeReport = reportDao.getLastReport();
+        activeReport = reportDao.getLastReport();
     }
 
     @Override
@@ -93,7 +96,7 @@ public class TaskListAdapter extends BaseAdapter implements View.OnClickListener
 
         TextView tvTime = (TextView) convertView.findViewById(R.id.txtTaskTime);
 
-        long activeTaskId = (activeReport == null) ? 0 : activeReport.getId();
+        long activeTaskId = (activeReport == null) ? 0 : activeReport.getTask_id();
 
         if (task.getId() == activeTaskId) {
             btnPlayPause.setBackgroundResource(R.drawable.pause);
@@ -105,7 +108,16 @@ public class TaskListAdapter extends BaseAdapter implements View.OnClickListener
         TaskTimeCalc ttc = new TaskTimeCalc();
         ttc.execute(w);
 
+        Log.d(TAG, "TaskListAdapter: task id = " + activeTaskId);
+
         return convertView;
+    }
+
+    @Override
+    public void notifyDataSetChanged() {
+        activeReport = reportDao.getLastReport();
+        Log.d(TAG, "notifyDataSetChanged: Active task id = " + activeReport.getTask_id());
+        super.notifyDataSetChanged();
     }
 
     @Override
@@ -133,15 +145,11 @@ public class TaskListAdapter extends BaseAdapter implements View.OnClickListener
             }
         }
 
-        updateActiveTask();
+        notifyDataSetChanged();
     }
 
     public void updateData() {
         this.tasks = this.taskDao.getAll();
-        notifyDataSetChanged();
-    }
-
-    public void updateActiveTask() {
         notifyDataSetChanged();
     }
 
@@ -163,7 +171,6 @@ public class TaskListAdapter extends BaseAdapter implements View.OnClickListener
 
         @Override
         protected Long doInBackground(Wrapper... params) {
-            long res = 0;
             Calendar now = Calendar.getInstance();
 
             wrapper = params[0];
@@ -180,7 +187,7 @@ public class TaskListAdapter extends BaseAdapter implements View.OnClickListener
                 }
             }
 
-            return res;
+            return totalTime;
         }
 
         @Override
