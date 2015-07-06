@@ -108,6 +108,25 @@ public class TimestampDAO {
         return getAll(where);
     }
 
+    public Timestamp getLast(){
+        Timestamp res = null;
+
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        Cursor c = db.query(
+                TimestampEntry.TABLE_NAME,
+                TimestampEntry.PROJECTION,
+                null, null, null, null, null
+        );
+
+        if (c.moveToLast()) {
+            res = new Timestamp(c.getLong(c.getColumnIndex(TimestampEntry.COLUMN_TIME)));
+            res.setId(c.getLong(c.getColumnIndex(TimestampEntry.COLUMN_TIME)));
+        }
+
+        return res;
+    }
+
     public boolean update(Timestamp ts) {
         boolean res = false;
 

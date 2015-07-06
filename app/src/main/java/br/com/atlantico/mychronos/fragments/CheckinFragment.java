@@ -120,13 +120,22 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
 
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
         Timestamp ts = new Timestamp(curDate, hourOfDay, minute);
-        int count = timestamps.size();
-        if (count > 0) {
-            Timestamp last = timestamps.get(count - 1);
-            if (ts.getTime() > last.getTime()) {
-                addTimestamp(ts);
+        Timestamp last = tsDao.getLast();
+        if (last != null) {
+            if (!TimeUtils.isSameDay(last.getTimeCalendar(), ts.getTimeCalendar())) {
+                String date = TimeUtils.getSQLDate(last.getTimeCalendar());
+                ArrayList<Timestamp> stampsFromDate = tsDao.getAllFromDate(date);
+                if (stampsFromDate.size() % 2 == 0) {
+                    addTimestamp(ts);
+                } else {
+                    Snackbar.make(getView(), R.string.msg_open_time, Snackbar.LENGTH_SHORT).show();
+                }
             } else {
-                Snackbar.make(getView(), R.string.msg_greater_time, Snackbar.LENGTH_SHORT).show();
+                if (ts.getTime() > last.getTime()) {
+                    addTimestamp(ts);
+                } else {
+                    Snackbar.make(getView(), R.string.msg_greater_time, Snackbar.LENGTH_SHORT).show();
+                }
             }
         } else {
             addTimestamp(ts);
@@ -147,21 +156,24 @@ public class CheckinFragment extends Fragment implements View.OnClickListener, T
             ts.setId(id);
             timestamps.add(ts);
 
+
             Report last = reportDAO.getLastReport();
 
             if (last != null && last.getEndTime() == 0) {
                 last.setEndTime(ts.getTime());
                 reportDAO.update(last);
             } else {
-                Report report = new Report(Constants.LIMBO_ID, ts.getTime());
-                reportDAO.add(report);
+                if (TimeUtils.isSameDay(ts.getTimeCalendar(), Calendar.getInstance())) {
+                    Report report = new Report(Constants.LIMBO_ID, ts.getTime());
+                    reportDAO.add(report);
+                } else {
+                    Snackbar.make(getView(), R.string.msg_unable_to_record, Snackbar.LENGTH_SHORT).show();
+                }
             }
 
             getActivity().sendBroadcast(new Intent(DataSetChangedBroadcastReceiver.DATA_CHANGE));
-
-        } else {
-            Snackbar.make(getView(), R.string.msg_unable_to_record, Snackbar.LENGTH_SHORT).show();
         }
+
     }
 
     private void stepDate(boolean next) {

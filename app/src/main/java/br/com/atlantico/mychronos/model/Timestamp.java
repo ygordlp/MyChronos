@@ -50,6 +50,12 @@ public class Timestamp {
         return time;
     }
 
+    public Calendar getTimeCalendar() {
+        Calendar cal = Calendar.getInstance();
+        cal.setTimeInMillis(time);
+        return cal;
+    }
+
     public int getHour() {
         return this.hour;
     }
