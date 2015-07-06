@@ -68,6 +68,7 @@ public class ReportDAO {
             res = new Report(id, task_id, starTime, endTime);
         }
 
+        c.close();
         return res;
     }
 
@@ -103,6 +104,7 @@ public class ReportDAO {
             }
         }
 
+        c.close();
         return reports;
     }
 

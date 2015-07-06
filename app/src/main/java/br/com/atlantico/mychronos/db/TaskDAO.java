@@ -124,6 +124,41 @@ public class TaskDAO {
         return getAll(null, orderBy);
     }
 
+    public ArrayList<Task> getAllTaskWithReport(String sqlDate) {
+        ArrayList<Task> tasks = new ArrayList<>();
+        SQLiteDatabase db = mDbHelper.getReadableDatabase();
+
+        String sql = "SELECT " + TaskEntry.TABLE_NAME + "." + TaskEntry.COLUMN_ID +
+                ", "  + TaskEntry.TABLE_NAME + "." + TaskEntry.COLUMN_NAME +
+                " FROM " + TaskEntry.TABLE_NAME + ", " + ReportEntry.TABLE_NAME +
+                " WHERE STRFTIME('%Y-%m-%d', datetime(" + ReportEntry.COLUMN_START_TIME  +
+                "/1000, 'unixepoch')) LIKE '" + sqlDate + "' AND " + TaskEntry.TABLE_NAME + "." + TaskEntry.COLUMN_ID +
+                " = " + ReportEntry.TABLE_NAME + "." + ReportEntry.COLUMN_TASK_ID + " GROUP BY "
+                + TaskEntry.TABLE_NAME + "." + TaskEntry.COLUMN_ID + ";";
+
+        Cursor c = db.rawQuery(sql, null);
+
+        if (c.moveToFirst()) {
+            Task task;
+            long id = c.getLong(c.getColumnIndex(TaskEntry.COLUMN_ID));
+            String name = c.getString(c.getColumnIndex(TaskEntry.COLUMN_NAME));
+            task = new Task(id, name);
+
+            tasks.add(task);
+
+            while (c.moveToNext()) {
+                id = c.getLong(c.getColumnIndex(TaskEntry.COLUMN_ID));
+                name = c.getString(c.getColumnIndex(TaskEntry.COLUMN_NAME));
+                task = new Task(id, name);
+                tasks.add(task);
+            }
+        }
+
+        c.close();
+
+        return tasks;
+    }
+
     public boolean update(Task task) {
         boolean res = false;
 
