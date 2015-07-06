@@ -38,5 +38,6 @@
     <string name="msg_task_added">A tarefa adicionada.</string>
     <string name="msg_task_updated">A tarefa alterada.</string>
     <string name="msg_start_day">Você deve bater o ponto antes de iniciar uma tarefa.</string>
+    <string name="msg_open_time">Você possui um ponto em aberto de outro dia.</string>
 
 </resources>
