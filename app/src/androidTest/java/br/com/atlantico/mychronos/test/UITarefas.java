@@ -58,13 +58,14 @@ public class UITarefas extends ActivityInstrumentationTestCase2<MainActivity> {
     public void testAddTarefa(){
         solo.clickOnText("Tarefas");
         solo.clickOnView(solo.getView(R.id.fabAddTask));
-        solo.waitForDialogToOpen();
+        Assert.assertTrue(solo.waitForDialogToOpen());
         Assert.assertTrue(solo.searchText("OK"));
         Assert.assertTrue(solo.searchText("Cancelar"));
-        solo.enterText(0, "Robotium");
-        Assert.assertTrue(solo.waitForText("Robotium"));
+        solo.enterText(0, "Robotium2");
+        Assert.assertTrue(solo.waitForText("Robotium2"));
         solo.clickOnButton("OK");
-        solo.waitForDialogToClose();
+        Assert.assertTrue(solo.waitForDialogToClose());
+        Assert.assertTrue(solo.waitForText("Tarefa adicionada"));
 
     }
 

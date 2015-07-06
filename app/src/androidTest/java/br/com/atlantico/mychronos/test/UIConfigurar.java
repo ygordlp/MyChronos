@@ -46,6 +46,7 @@ public class UIConfigurar extends ActivityInstrumentationTestCase2<MainActivity>
         solo.clickOnText("Configurações");
         solo.clickOnRadioButton(1);
         Assert.assertTrue(solo.isRadioButtonChecked(1));
+        Assert.assertTrue(solo.waitForText("Sua jornada de trabalho será de 6 horas"));
     }
 
     public void testJonardaQuatroHr(){
