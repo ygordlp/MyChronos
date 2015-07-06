@@ -19,7 +19,7 @@ import br.com.atlantico.mychronos.db.TaskDAO;
 import br.com.atlantico.mychronos.dialogs.TextInputDialog;
 import br.com.atlantico.mychronos.model.Task;
 
-public class TasksFragment extends Fragment implements View.OnClickListener, TextInputDialog.TextInputListner, AdapterView.OnItemLongClickListener {
+public class TasksFragment extends Fragment implements View.OnClickListener, TextInputDialog.TextInputListner, AdapterView.OnItemLongClickListener, AdapterView.OnItemClickListener {
 
     public static final String TAG = "TasksFragment";
 
@@ -59,6 +59,7 @@ public class TasksFragment extends Fragment implements View.OnClickListener, Tex
         ListView list = (ListView) view.findViewById(R.id.taskList);
         list.setAdapter(adapter);
         list.setOnItemLongClickListener(this);
+        list.setOnItemClickListener(this);
 
         view.findViewById(R.id.fabAddTask).setOnClickListener(this);
 
@@ -135,5 +136,10 @@ public class TasksFragment extends Fragment implements View.OnClickListener, Tex
             dialog.show(getFragmentManager(), TAG);
         }
         return true;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        adapter.onItemSelected(adapter.getItem(position));
     }
 }

@@ -25,7 +25,7 @@ import br.com.atlantico.mychronos.utils.TimeUtils;
 /**
  * Created by pereira_ygor on 23/06/2015.
  */
-public class TaskListAdapter extends BaseAdapter implements View.OnClickListener {
+public class TaskListAdapter extends BaseAdapter {
 
     public static final String TAG = "TaskListAdapter";
 
@@ -91,15 +91,13 @@ public class TaskListAdapter extends BaseAdapter implements View.OnClickListener
         taskName.setText(task.getName());
 
         ImageView btnPlayPause = (ImageView) convertView.findViewById(R.id.btnPlayPause);
-        btnPlayPause.setTag(task);
-        btnPlayPause.setOnClickListener(this);
 
         TextView tvTime = (TextView) convertView.findViewById(R.id.txtTaskTime);
 
         long activeTaskId = (activeReport == null) ? 0 : activeReport.getTask_id();
 
         if (task.getId() == activeTaskId) {
-            btnPlayPause.setBackgroundResource(R.drawable.pause);
+            btnPlayPause.setBackgroundResource(R.drawable.record);
         } else {
             btnPlayPause.setBackgroundResource(R.drawable.play);
         }
@@ -124,15 +122,7 @@ public class TaskListAdapter extends BaseAdapter implements View.OnClickListener
         super.notifyDataSetChanged();
     }
 
-    @Override
-    public void onClick(View v) {
-        Task task;
-        try {
-            task = (Task) v.getTag();
-        } catch (ClassCastException e) {
-            task = null;
-        }
-
+    public void onItemSelected(Task task) {
         if (task != null) {
             Report last = reportDao.getLastReport();
             if (last != null) {
