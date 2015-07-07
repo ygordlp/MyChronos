@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import br.com.atlantico.mychronos.model.Report;
 import br.com.atlantico.mychronos.model.Timestamp;
 
 /**
@@ -142,18 +143,35 @@ public class TimeUtils {
      * @param days
      * @return
      */
-    public Calendar getAfterBeforeDays(Calendar cal, int days){
+    public static Calendar getAfterBeforeDays(Calendar cal, int days){
         Calendar day = Calendar.getInstance();
         day.setTimeInMillis(cal.getTimeInMillis());
         day.add(Calendar.DAY_OF_MONTH, 1);
         return day;
     }
 
-    public Calendar getNextDay(Calendar cal){
+    public static long getReportsTotalTime(ArrayList<Report> reports){
+        long totalTime = 0;
+        Calendar now = Calendar.getInstance();
+
+        for (Report r : reports) {
+            if (r.getEndTime() > 0) {
+                totalTime += r.getTotalTime();
+            } else {
+                if (r.getStartTime() > 0) {
+                    totalTime += now.getTimeInMillis() - r.getStartTime();
+                }
+            }
+        }
+
+        return totalTime;
+    }
+
+    public static Calendar getNextDay(Calendar cal){
         return getAfterBeforeDays(cal, 1);
     }
 
-    public Calendar getPreviousDay(Calendar cal){
+    public static Calendar getPreviousDay(Calendar cal){
         return getAfterBeforeDays(cal, -1);
     }
 }

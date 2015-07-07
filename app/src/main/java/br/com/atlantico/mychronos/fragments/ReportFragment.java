@@ -71,10 +71,7 @@ public class ReportFragment extends Fragment implements View.OnClickListener {
 
         ArrayList<Report> reports = reportDAO.getAllFromStartedDate(TimeUtils.getSQLDate(curDate));
 
-        long workedTime = 0;
-        for(Report r : reports){
-            workedTime += r.getTotalTime();
-        }
+        long workedTime = TimeUtils.getReportsTotalTime(reports);
 
         if (workedTime > 0) {
             txtWorkedHours.setText(TimeUtils.TimeDHMtoString(workedTime));

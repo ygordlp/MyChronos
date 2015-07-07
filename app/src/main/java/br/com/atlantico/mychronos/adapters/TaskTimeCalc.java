@@ -19,27 +19,20 @@ public class TaskTimeCalc extends AsyncTask<Wrapper, Void, Long> {
 
     private ReportDAO reportDao;
 
-    public TaskTimeCalc(Context context){
+    private Calendar date = Calendar.getInstance();
+
+    public TaskTimeCalc(Context context, Calendar date){
         reportDao = ReportDAO.getInstance(context);
+        this.date = date;
     }
 
     @Override
     protected Long doInBackground(Wrapper... params) {
-        Calendar now = Calendar.getInstance();
-
         wrapper = params[0];
-        String date = TimeUtils.getSQLDate(now);
-        ArrayList<Report> reports = reportDao.getAllFromTaskAndDate(wrapper.task.getId(), date);
-        long totalTime = 0;
-        for (Report r : reports) {
-            if (r.getEndTime() > 0) {
-                totalTime += r.getTotalTime();
-            } else {
-                if (r.getStartTime() > 0) {
-                    totalTime += now.getTimeInMillis() - r.getStartTime();
-                }
-            }
-        }
+        String sqlDate = TimeUtils.getSQLDate(date);
+
+        ArrayList<Report> reports = reportDao.getAllFromTaskAndDate(wrapper.task.getId(), sqlDate);
+        long totalTime = TimeUtils.getReportsTotalTime(reports);
 
         return totalTime;
     }

@@ -94,7 +94,7 @@ public class ReporListAdapter extends BaseAdapter {
         TextView tvTime = (TextView) convertView.findViewById(R.id.txtTaskTime);
 
         Wrapper w = new Wrapper(task, position, tvTime);
-        TaskTimeCalc ttc = new TaskTimeCalc(context);
+        TaskTimeCalc ttc = new TaskTimeCalc(context, curDate);
         ttc.execute(w);
 
         return convertView;

@@ -101,7 +101,7 @@ public class TaskListAdapter extends BaseAdapter {
         }
 
         Wrapper w = new Wrapper(task, position, tvTime);
-        TaskTimeCalc ttc = new TaskTimeCalc(context);
+        TaskTimeCalc ttc = new TaskTimeCalc(context, Calendar.getInstance());
         ttc.execute(w);
 
         Log.d(TAG, "TaskListAdapter: task id = " + activeTaskId);
