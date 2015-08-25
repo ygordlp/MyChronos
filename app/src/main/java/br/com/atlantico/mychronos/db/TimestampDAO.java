@@ -61,7 +61,8 @@ public class TimestampDAO {
 
         if (c.moveToFirst()) {
             res = new Timestamp(c.getLong(c.getColumnIndex(TimestampEntry.COLUMN_TIME)));
-            res.setId(c.getLong(c.getColumnIndex(TimestampEntry.COLUMN_TIME)));
+            res.setId(c.getLong(c.getColumnIndex(TimestampEntry.COLUMN_ID)));
+
         }
 
         return res;
